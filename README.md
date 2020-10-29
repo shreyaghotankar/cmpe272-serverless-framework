@@ -6,7 +6,7 @@ randomly choosing colors and locations of text, writing an image into an S3 buck
 This will create an API that can be used by web services or users to generate doge images,
 while consuming no dedicated or long-lived resources besides space on S3.
 
-![Doge image](https://s3.amazonaws.com/iopipe-workshop-doge-2/doge-996.jpg)
+
 
 
 # Preparation:
@@ -90,46 +90,16 @@ text overlaid onto the image.
 
 Edit the code and do fun things!
 
-# IOpipe account
+## Graphicsmagick/Imagemagick issues
 
-While not critical for a doge-text app, more serious applications, including
-ChatBots, Voice assistents, production web services, etc. will benefit from
-Application Performance Monitoring & Management (APM).
-
-IOpipe is offering free beta access to an APM service designed specifically
-for serverless applications.
-
-* `npm install --save iopipe`
-* Import & configure the module:
-
-```
-/* Get client-id token from https://dashboard.iopipe.com */
-var iopipe = require("iopipe")({ clientId: "my-client-id-here" })
-```
-
-* Modify the handler, wrapping the function declaration with iopipe(). Make sure to close the parens by placing a `)` character after the final `}` character.
-
-```
-module.exports.create = iopipe((event, context, cb) => {
-  ...
-})
-```
-
-* Redeploy: `serverless deploy`
-* Invoke function: `serverless invoke --function create -p event.json`
-* Check [dashboard](https://dashboard.iopipe.com)
-
-# Extra homework!
-
-This is actually a functioning Slackbot! If you have admin permission on a Slack, you can add this as a /doge slash command!
-
-- Visit [Custom Integrations](https://iopipe.slack.com/apps/manage/custom-integrations), choose 'Slash Commands', then 'Add Configuration'.
-- Specify the command `/doge` and click, `Add Integration`.
-- Provide the URL given by `serverless deploy`
-- Specify `GET` as the HTTP method.
-- Click `Save Integration`
-
-Now you can type `/doge this text gets printed onto your doge!`
+With nodejs10.x and higher you can encounter issuse with imagemagick. To resolve this issue you need to create a imagemagick lambda layer and add it to your yaml file.
+Clone this https://github.com/serverlesspub/imagemagick-aws-lambda-2 repo and update the Makefile_Imagemagick file to include freetype.
+I have used the Makefile mentioned below:
+https://github.com/serverlesspub/imagemagick-aws-lambda-2/files/3844453/Makefile_ImageMagick.txt
+Follow the make commands mentioned in the readme from the repo cloned earlier. You need to create a separate bucket in S3 to deploy this layer.
+Once you have the arn value add it to the serverless.yml file and add binPath: "/opt/bin" to the first statement in the doge.js.
+Now for the font config to work you need to add environment variable to your Lambda function:
+FONTCONFIG_PATH   ./fonts
 
 # Delete resources
 
