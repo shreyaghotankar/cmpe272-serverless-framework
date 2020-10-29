@@ -1,3 +1,5 @@
+## As part of cmpe272 assignment#4, we have cloned https://github.com/iopipe/lambda-workshop.git repo, updated it to make it working with nodejs10.x and changed code to reflect changes in fonts and colors.
+
 # Serverless Development Workshop
 
 In this workshop, we'll deploy a simple serverless application which generates Doge meme images,
